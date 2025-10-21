@@ -10,7 +10,7 @@
 <body class="bg-gray-50 text-gray-800 font-sans">
 
   <!-- Шапка -->
-  <header class="bg-white shadow-sm">
+  <header class="bg-white shadow">
     <div class="max-w-6xl mx-auto flex justify-between items-center p-4">
       <h1 class="text-2xl font-bold text-indigo-600">LinkHub</h1>
       <nav class="space-x-6 hidden md:flex">
@@ -54,11 +54,11 @@
       <div class="grid md:grid-cols-3 gap-10">
 
         <!-- Free -->
-        <div class="bg-white border border-gray-200 rounded-3xl shadow p-8 hover:shadow-lg transition">
+        <div class="bg-white border rounded-3xl shadow p-8 hover:shadow-lg transition">
           <h4 class="text-2xl font-bold text-indigo-600 mb-4">Free</h4>
           <p class="text-gray-500 mb-6">Для старта и тестов</p>
           <p class="text-5xl font-extrabold mb-6">0₽<span class="text-lg font-medium text-gray-500"> /мес</span></p>
-          <ul class="text-left text-gray-600 mb-8">
+          <ul class="text-left text-gray-600 mb-8 space-y-1">
             <li>✅ 1 активная ссылка</li>
             <li>✅ Базовая аналитика</li>
             <li>🚫 Без AI</li>
@@ -73,7 +73,7 @@
           <h4 class="text-2xl font-bold text-indigo-700 mb-4">Pro</h4>
           <p class="text-gray-500 mb-6">Для малого бизнеса</p>
           <p class="text-5xl font-extrabold mb-6">590₽<span class="text-lg font-medium text-gray-500"> /мес</span></p>
-          <ul class="text-left text-gray-600 mb-8">
+          <ul class="text-left text-gray-600 mb-8 space-y-1">
             <li>✅ До 5 ссылок</li>
             <li>✅ Расширенная аналитика</li>
             <li>✅ AI-помощник</li>
@@ -84,11 +84,11 @@
         </div>
 
         <!-- Business -->
-        <div class="bg-white border border-gray-200 rounded-3xl shadow p-8 hover:shadow-lg transition">
+        <div class="bg-white border rounded-3xl shadow p-8 hover:shadow-lg transition">
           <h4 class="text-2xl font-bold text-indigo-700 mb-4">Business</h4>
           <p class="text-gray-500 mb-6">Для агентств и команд</p>
           <p class="text-5xl font-extrabold mb-6">1490₽<span class="text-lg font-medium text-gray-500"> /мес</span></p>
-          <ul class="text-left text-gray-600 mb-8">
+          <ul class="text-left text-gray-600 mb-8 space-y-1">
             <li>✅ Безлимитные ссылки</li>
             <li>✅ Командный доступ</li>
             <li>✅ AI-аналитика</li>
@@ -105,10 +105,11 @@
   <!-- Контактная форма -->
   <section id="contact" class="py-20 text-center">
     <h3 class="text-3xl font-bold mb-8">Оставь заявку и получи ранний доступ</h3>
-    <form action="https://script.google.com/macros/s/AKfycbw_Jk1y7e-vIExMtrk06k5w3bMy6Q-2xqHLUgHFOODW2b9J15HEYsfmEHTFeVzZB6w/exec" method="POST" class="max-w-md mx-auto bg-white p-8 rounded-2xl shadow space-y-4">
+    <form id="leadForm" action="https://script.google.com/macros/s/AKfycbw_Jk1y7e-vIExMtrk06k5w3bMy6Q-2xqHLUgHFOODW2b9J15HEYsfmEHTFeVzZB6w/exec" method="POST" class="max-w-md mx-auto bg-white p-8 rounded-2xl shadow space-y-4">
       <input type="text" name="name" placeholder="Имя" required class="w-full border rounded-xl p-3 focus:ring-2 focus:ring-indigo-500" />
       <input type="email" name="email" placeholder="Email" required class="w-full border rounded-xl p-3 focus:ring-2 focus:ring-indigo-500" />
       <input type="text" name="telegram" placeholder="Telegram (необязательно)" class="w-full border rounded-xl p-3 focus:ring-2 focus:ring-indigo-500" />
+      <input type="hidden" id="selectedPlanInput" name="plan" value="">
       <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl w-full transition">Отправить</button>
     </form>
   </section>
@@ -118,35 +119,17 @@
     <p>© 2025 LinkHub — Умные ссылки с ИИ</p>
   </footer>
 
-  <!-- Модалка -->
-  <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
-    <div class="bg-white p-6 rounded-2xl shadow-xl w-80 text-center">
-      <h2 class="text-xl font-semibold mb-3">Тариф выбран 🎉</h2>
-      <p id="selectedPlan" class="text-gray-600 mb-4"></p>
-      <button id="closeModal" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl w-full transition">
-        Отлично!
-      </button>
-    </div>
-  </div>
-
+  <!-- Скрипт -->
   <script>
     const planButtons = document.querySelectorAll('.plan-button');
-    const modal = document.getElementById('modal');
-    const selectedPlanText = document.getElementById('selectedPlan');
-    const closeModal = document.getElementById('closeModal');
+    const selectedPlanInput = document.getElementById('selectedPlanInput');
 
     planButtons.forEach(button => {
       button.addEventListener('click', () => {
         const planName = button.getAttribute('data-plan');
-        selectedPlanText.textContent = `Вы выбрали тариф: ${planName}`;
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
+        selectedPlanInput.value = planName; // Заполняем скрытое поле
+        document.querySelector('#contact').scrollIntoView({ behavior: 'smooth' }); // Скролл к форме
       });
-    });
-
-    closeModal.addEventListener('click', () => {
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
     });
   </script>
 
